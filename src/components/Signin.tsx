@@ -5,12 +5,12 @@ const Form = () => {
     <div className="min-h-screen flex items-center justify-center py-20 px-4">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg py-10">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">
-          FounderIQ
+          Founder<span className="text-purple-800">IQ</span>
         </h2>
         <form className="space-y-4 mb-10">
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded cursor-pointer"
+            className="w-full bg-purple-800 text-white py-2 rounded-lg cursor-pointer"
           >
             <FcGoogle className="inline-block mr-2" size={28} />
             Login with Google

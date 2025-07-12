@@ -1,54 +1,19 @@
+import { FcGoogle } from "react-icons/fc";
+
 const Form = () => {
   return (
     <div className="min-h-screen flex items-center justify-center py-20 px-4">
-      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-          Create an Account
+      <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-lg py-10">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-10">
+          FounderIQ
         </h2>
-        <form className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Your Email <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="email"
-              placeholder="name@example.com"
-              className="w-full p-2 border border-gray-300 rounded mt-1"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Password <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="password"
-              placeholder="Enter Password"
-              className="w-full p-2 border border-gray-300 rounded mt-1"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Confirm Password <span className="text-red-600">*</span>
-            </label>
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              className="w-full p-2 border border-gray-300 rounded mt-1"
-              required
-            />
-          </div>
-
-          <div></div>
-
+        <form className="space-y-4 mb-10">
           <button
             type="submit"
             className="w-full bg-black text-white py-2 rounded cursor-pointer"
           >
-            Create Account
+            <FcGoogle className="inline-block mr-2" size={28} />
+            Login with Google
           </button>
         </form>
 

@@ -43,7 +43,7 @@ export default function Sidebar() {
 
           <button
             onClick={() => setChats(["New Chat", ...chats])}
-            className="w-full mt-4 py-2 bg-purple-800 rounded text-sm font-medium cursor-pointer"
+            className="w-full mt-4 py-2 bg-purple-800 rounded-md text-sm font-medium cursor-pointer"
           >
             + New Chat
           </button>

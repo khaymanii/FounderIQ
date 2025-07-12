@@ -5,14 +5,12 @@ const techSectors = [
   "Robotics",
   "Software Engineering",
   "E-commerce",
-  "SaaS",
   "Fintech",
   "Healthtech",
   "Edtech",
   "Greentech",
   "Gaming",
   "Autonomous Vehicles",
-  "Quantum Computing",
   "5G & Telecom",
   "UI/UX Design",
 ];
@@ -35,7 +33,7 @@ export default function Dropdown({
       <div className="w-full">
         <label
           htmlFor="sector"
-          className="block mb-2 mt-4 text-sm font-medium text-gray-700 text-center"
+          className="block mb-2 mt-4 text-sm font-medium text-center"
         >
           Select a Tech Sector
         </label>
@@ -43,15 +41,17 @@ export default function Dropdown({
           id="sector"
           value={selected}
           onChange={handleChange}
-          className="w-full px-4 py-2 border  border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-800"
+          className="w-full px-4 py-2 text-sm border border-gray-300 rounded-t-md focus:outline-none "
         >
           <option value="" disabled>
             -- Choose a sector --
           </option>
           {techSectors.map((sector) => (
-            <option key={sector} value={sector}>
-              {sector}
-            </option>
+            <div className="mt-4 ">
+              <option key={sector} value={sector}>
+                {sector}
+              </option>
+            </div>
           ))}
         </select>
       </div>

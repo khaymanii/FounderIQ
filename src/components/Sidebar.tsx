@@ -15,13 +15,6 @@ export default function Sidebar() {
     "Startup Assistant",
     "Startup Assistant",
     "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
   ]);
 
   const toggleSidebar = () => setIsOpen(!isOpen);

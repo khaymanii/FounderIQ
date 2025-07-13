@@ -19,7 +19,9 @@ const Form = () => {
 
         <p className="mt-6 text-center text-xs text-gray-400">
           © Copyright 2025&nbsp;
-          <span className="font-semibold text-gray-600">FounderIQ.</span>
+          <span className="font-semibold text-gray-600">
+            Founder<span className="text-purple-800">IQ</span>
+          </span>
           &nbsp;All Rights Reserved.
         </p>
       </div>

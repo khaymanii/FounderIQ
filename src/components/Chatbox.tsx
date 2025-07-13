@@ -16,9 +16,9 @@ export default function Chatbox({
   };
   return (
     <div className="max-w-5xl mx-auto">
-      <div className="flex-1 flex justify-around items-center px-4 py-4 border border-gray-300 rounded-md resize-none">
+      <div className="flex-1 flex justify-around items-center p-4 border border-gray-500 rounded-md resize-none">
         <textarea
-          rows={1}
+          rows={2}
           placeholder="Ask me like you’d ask Elon...."
           className="border-none w-full h-full resize-none focus:outline-none"
           value={message}
@@ -33,7 +33,7 @@ export default function Chatbox({
         />
         <button
           type="submit"
-          className="bg-purple-600 hover:bg-purple-700 text-white p-2 rounded-full cursor-pointer"
+          className="bg-purple-800 hover:bg-purple-900 text-white p-2 rounded-full cursor-pointer"
           disabled
         >
           <ArrowUp size={20} />{" "}

@@ -7,6 +7,21 @@ export default function Sidebar() {
     "Chat with Investor Bot",
     "Product Feedback Chat",
     "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
+    "Startup Assistant",
   ]);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
@@ -30,13 +45,13 @@ export default function Sidebar() {
         } md:translate-x-0 md:relative`}
       >
         {/* Header */}
-        <div className="px-4 py-10 border-b border-gray-700 relative">
+        <div className="px-4 pt-10 pb-6 relative">
           <h1 className="text-xl font-bold text-center">FounderIQ</h1>
 
           {/* Close icon (mobile only, inside sidebar) */}
           <button
             onClick={toggleSidebar}
-            className="absolute left-4 top-6 md:hidden text-gray-300"
+            className="absolute left-4 top-6 md:hidden text-white"
           >
             <PanelLeftClose size={30} />
           </button>
@@ -50,7 +65,7 @@ export default function Sidebar() {
         </div>
 
         {/* Chat List */}
-        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+        <div className="flex-1 overflow-y-auto px-4 space-y-2 custom-scrollbar">
           {chats.map((chat, index) => (
             <div
               key={index}
@@ -62,7 +77,7 @@ export default function Sidebar() {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-gray-700 text-sm">
+        <div className="px-4 py-4 text-sm">
           <div className="flex items-center gap-3">
             <div className="h-12 w-12 rounded-full bg-purple-300"></div>
             <p>My Profile</p>

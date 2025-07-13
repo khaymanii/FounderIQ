@@ -29,7 +29,7 @@ export default function Dropdown({
   };
 
   return (
-    <div className="w-72 max-w-sm">
+    <div className="w-60 max-w-sm">
       <div className="w-full">
         <label
           htmlFor="sector"
@@ -41,7 +41,7 @@ export default function Dropdown({
           id="sector"
           value={selected}
           onChange={handleChange}
-          className="w-full px-4 py-2 text-sm border border-gray-300 rounded-t-md focus:outline-none "
+          className="w-full px-4 py-2 text-sm border border-gray-500 rounded-t-md focus:outline-none "
         >
           <option value="" disabled>
             -- Choose a sector --

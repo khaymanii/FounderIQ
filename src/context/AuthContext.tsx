@@ -8,6 +8,7 @@ import {
 } from "react";
 import { supabase } from "../supabaseClient";
 import type { User } from "@supabase/supabase-js";
+import { useNavigate } from "react-router-dom";
 
 // Define the shape of our context
 interface AuthContextProps {
@@ -31,6 +32,7 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // Check session on mount
   useEffect(() => {
@@ -67,6 +69,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Sign out
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
+    setUser(null);
+    navigate("/home"); // Redirect to sign-in page after logout
     if (error) console.error("Sign Out Error:", error.message);
   };
 

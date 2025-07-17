@@ -1,23 +1,36 @@
-import { useState } from "react";
-import { PanelLeftClose, PanelRightClose } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { PanelLeftClose, PanelRightClose, LogOut } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showPopover, setShowPopover] = useState(false);
   const [chats, setChats] = useState([
     "Chat with Investor Bot",
     "Product Feedback Chat",
     "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
-    "Startup Assistant",
   ]);
+  const { user, signOut } = useAuth();
+
+  const profileRef = useRef<HTMLDivElement>(null);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
+
+  // Close popover when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
@@ -25,7 +38,7 @@ export default function Sidebar() {
       {!isOpen && (
         <div className="md:hidden fixed top-4 left-4 z-50">
           <button onClick={toggleSidebar}>
-            <PanelRightClose size={30} />
+            <PanelRightClose size={24} />
           </button>
         </div>
       )}
@@ -38,7 +51,7 @@ export default function Sidebar() {
         } md:translate-x-0 md:relative`}
       >
         {/* Header */}
-        <div className="px-4 pt-10 pb-6 relative">
+        <div className="px-4 pt-6 pb-6 relative">
           <h1 className="text-xl font-bold text-center">FounderIQ</h1>
 
           {/* Close icon (mobile only, inside sidebar) */}
@@ -46,12 +59,12 @@ export default function Sidebar() {
             onClick={toggleSidebar}
             className="absolute left-4 top-6 md:hidden text-white"
           >
-            <PanelLeftClose size={30} />
+            <PanelLeftClose size={24} />
           </button>
 
           <button
             onClick={() => setChats(["New Chat", ...chats])}
-            className="w-full mt-4 py-2 bg-purple-800 rounded-md text-sm font-medium cursor-pointer"
+            className="w-full mt-4 py-3 bg-purple-800 rounded-md text-xs font-medium cursor-pointer"
           >
             + New Chat
           </button>
@@ -62,7 +75,7 @@ export default function Sidebar() {
           {chats.map((chat, index) => (
             <div
               key={index}
-              className="p-3 rounded hover:bg-purple-800 cursor-pointer text-sm truncate"
+              className="p-3 rounded hover:bg-purple-800 cursor-pointer text-xs truncate"
             >
               {chat}
             </div>
@@ -70,11 +83,35 @@ export default function Sidebar() {
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-4 text-sm">
-          <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-purple-300"></div>
-            <p>My Profile</p>
+        <div className="px-4 py-4 text-sm relative" ref={profileRef}>
+          <div
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => setShowPopover((prev) => !prev)}
+          >
+            {user && (
+              <img
+                src={user?.user_metadata?.avatar_url}
+                alt="Profile"
+                className="w-12 h-12 rounded-full object-cover text-xs"
+              />
+            )}
+            <p className="font-bold">
+              {user?.user_metadata?.full_name || "My Profile"}
+            </p>
           </div>
+
+          {/* Popover */}
+          {showPopover && (
+            <div className="absolute bottom-16 left-22 bg-purple-100 text-black shadow-lg rounded-md p-2 w-40 z-50">
+              <button
+                onClick={signOut}
+                className="flex items-center gap-2 px-3 py-2 rounded  w-full text-left cursor-pointer"
+              >
+                <LogOut size={18} />
+                Logout
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

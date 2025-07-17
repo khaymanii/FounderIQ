@@ -33,7 +33,7 @@ export default function Dropdown({
       <div className="w-full">
         <label
           htmlFor="sector"
-          className="block mb-2 mt-4 text-sm font-medium text-center"
+          className="block mb-2 mt-2 text-sm font-medium text-center"
         >
           Select a Tech Sector
         </label>
@@ -41,7 +41,7 @@ export default function Dropdown({
           id="sector"
           value={selected}
           onChange={handleChange}
-          className="w-full px-4 py-2 text-sm border border-gray-500 rounded-t-md focus:outline-none "
+          className="w-full px-4 py-2 text-xs border border-gray-500 rounded-t-md focus:outline-none "
         >
           <option value="" disabled>
             -- Choose a sector --

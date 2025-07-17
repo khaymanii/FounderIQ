@@ -9,7 +9,7 @@ const Form = () => {
 
   useEffect(() => {
     if (!loading && user) {
-      navigate("/"); // change to your home/dashboard route
+      navigate("/chat");
     }
   }, [user, loading, navigate]);
 
@@ -30,11 +30,11 @@ const Form = () => {
         </div>
 
         <p className="mt-6 text-center text-xs text-gray-400">
-          © Copyright 2025
+          © Copyright 2025 {""}
           <span className="font-semibold text-gray-600">
             Founder<span className="text-purple-800">IQ</span>
           </span>{" "}
-          All Rights Reserved.
+          - All Rights Reserved.
         </p>
       </div>
     </div>

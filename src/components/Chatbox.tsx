@@ -36,7 +36,7 @@ export default function Chatbox({
           className="bg-purple-800 hover:bg-purple-900 text-white p-2 rounded-full cursor-pointer"
           disabled
         >
-          <ArrowUp size={20} />{" "}
+          <ArrowUp size={20} />
         </button>
       </div>
     </div>

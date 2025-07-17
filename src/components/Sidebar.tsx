@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { PanelLeftClose, PanelRightClose, LogOut } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useChat } from "../context/ChatContext";
 
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +12,7 @@ export default function Sidebar() {
     "Startup Assistant",
   ]);
   const { user, signOut } = useAuth();
+  const { newChat } = useChat();
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +33,10 @@ export default function Sidebar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
+  const handleNewChat = () => {
+    setChats((prev) => ["New Chat", ...prev]);
+    newChat(); // clear chat messages
+  };
   return (
     <>
       {/* Hamburger icon for mobile - only when sidebar is closed */}
@@ -63,7 +68,7 @@ export default function Sidebar() {
           </button>
 
           <button
-            onClick={() => setChats(["New Chat", ...chats])}
+            onClick={handleNewChat}
             className="w-full mt-4 py-3 bg-purple-800 rounded-md text-xs font-medium cursor-pointer"
           >
             + New Chat

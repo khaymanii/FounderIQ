@@ -28,9 +28,7 @@ function Chat() {
         {/* Chatbox fixed at the bottom */}
         <div className="fixed bottom-0 left-0 right-0 z-10  bg-purple-100 p-4 pb-8 md:ml-64">
           <div className="max-w-3xl mx-auto">
-            <Chatbox
-              onSend={(message) => console.log("Sent message:", message)}
-            />
+            <Chatbox />
           </div>
         </div>
       </div>

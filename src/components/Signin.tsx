@@ -22,7 +22,7 @@ const Form = () => {
         <div className="space-y-4 mb-10">
           <button
             onClick={signInWithGoogle}
-            className="w-full bg-purple-800 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-purple-900 transition-colors"
+            className="w-full bg-purple-800 text-white py-3 rounded-lg font-medium flex items-center justify-center gap-2 hover:bg-purple-900 transition-colors cursor-pointer"
           >
             <FcGoogle size={28} />
             Login with Google
@@ -30,7 +30,7 @@ const Form = () => {
         </div>
 
         <p className="mt-6 text-center text-xs text-gray-400">
-          © Copyright 2025{" "}
+          © Copyright 2025
           <span className="font-semibold text-gray-600">
             Founder<span className="text-purple-800">IQ</span>
           </span>{" "}

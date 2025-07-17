@@ -110,7 +110,7 @@ export default function Sidebar() {
             <div className="absolute bottom-16 left-22 bg-purple-100 text-black shadow-lg rounded-md p-2 w-40 z-50">
               <button
                 onClick={signOut}
-                className="flex items-center gap-2 px-3 py-2 rounded  w-full text-left cursor-pointer"
+                className="flex items-center gap-2 px-3 py-2 rounded hover:text-purple-800 w-full text-left cursor-pointer"
               >
                 <LogOut size={18} />
                 Logout

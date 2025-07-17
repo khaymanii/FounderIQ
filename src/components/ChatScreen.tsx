@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useChat } from "../context/ChatContext";
 
 const quirkyMessages = [
@@ -17,19 +16,26 @@ const quirkyMessages = [
 
 function ChatScreen() {
   const { messages } = useChat();
-
-  // Pick one random message when component mounts
+  const [currentIndex, setCurrentIndex] = useState(0);
   const isEmpty = messages.length === 0;
-  const randomMessage = useMemo(() => {
-    const index = Math.floor(Math.random() * quirkyMessages.length);
-    return quirkyMessages[index];
+
+  useEffect(() => {
+    if (isEmpty) {
+      const interval = setInterval(() => {
+        setCurrentIndex((prev) => (prev + 1) % quirkyMessages.length);
+      }, 20000);
+
+      return () => clearInterval(interval);
+    }
   }, [isEmpty]);
 
   return (
     <div className="flex flex-col space-y-4 py-6">
-      {messages.length === 0 ? (
-        <div className="text-gray-600 text-2xl sm:text-4xl flex-col items-center justify-center text-center mt-10">
-          {randomMessage}
+      {isEmpty ? (
+        <div className="flex items-center justify-center text-center mt-40 px-4">
+          <p className="text-gray-600 text-2xl transition-all duration-500 ease-in-out">
+            {quirkyMessages[currentIndex]}
+          </p>
         </div>
       ) : (
         messages.map((msg) => (

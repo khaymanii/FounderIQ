@@ -32,7 +32,7 @@ export default function Chatbox() {
         <button
           type="submit"
           onClick={handleSend}
-          className={`p-2 rounded-full ${
+          className={`p-2 rounded-full cursor-pointer ${
             input.trim()
               ? "bg-purple-800 hover:bg-purple-900 text-white"
               : "bg-gray-300 text-gray-600 cursor-not-allowed"

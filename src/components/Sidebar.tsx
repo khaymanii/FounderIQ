@@ -6,13 +6,8 @@ import { useChat } from "../context/ChatContext";
 export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [showPopover, setShowPopover] = useState(false);
-  const [chats, setChats] = useState([
-    "Chat with Investor Bot",
-    "Product Feedback Chat",
-    "Startup Assistant",
-  ]);
   const { user, signOut } = useAuth();
-  const { newChat } = useChat();
+  const { chatSessions, newChat, selectChat, currentSessionId } = useChat();
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -33,9 +28,9 @@ export default function Sidebar() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-  const handleNewChat = () => {
-    setChats((prev) => ["New Chat", ...prev]);
-    newChat(); // clear chat messages
+
+  const handleNewChat = async () => {
+    await newChat(); // create a new chat session and clear messages
   };
   return (
     <>
@@ -50,14 +45,16 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-64 bg-purple-900 text-white flex flex-col z-40 transform transition-transform duration-300 ease-in-out
+        className={`fixed top-0 left-0 h-screen w-64 bg-black text-white flex flex-col z-40 transform transition-transform duration-300 ease-in-out
         ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:relative`}
       >
         {/* Header */}
         <div className="px-4 pt-6 pb-6 relative">
-          <h1 className="text-xl font-bold text-center">FounderIQ</h1>
+          <h1 className="text-xl font-bold text-center">
+            Founder<span className="text-purple-800">IQ</span>
+          </h1>
 
           {/* Close icon (mobile only, inside sidebar) */}
           <button
@@ -77,14 +74,19 @@ export default function Sidebar() {
 
         {/* Chat List */}
         <div className="flex-1 overflow-y-auto px-4 space-y-2 custom-scrollbar">
-          {chats.map((chat, index) => (
-            <div
-              key={index}
-              className="p-3 rounded hover:bg-purple-800 cursor-pointer text-xs truncate"
-            >
-              {chat}
-            </div>
-          ))}
+          {chatSessions.map((chat) => {
+            const isActive = chat.id === currentSessionId;
+            return (
+              <div
+                key={chat.id}
+                onClick={() => selectChat(chat.id)}
+                className={`p-3 rounded cursor-pointer text-xs truncate transition-colors
+                  ${isActive ? "bg-purple-800 font-bold" : ""}`}
+              >
+                {chat.title}
+              </div>
+            );
+          })}
         </div>
 
         {/* Footer */}

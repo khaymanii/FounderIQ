@@ -26,7 +26,6 @@ export default function Sidebar() {
 
   const toggleSidebar = () => setIsOpen(!isOpen);
 
-  // Close popover when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (

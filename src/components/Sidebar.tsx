@@ -20,7 +20,14 @@ export default function Sidebar() {
   const [showPopover, setShowPopover] = useState(false);
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(null);
   const { user, signOut } = useAuth();
-  const { chatSessions, newChat, selectChat, currentSessionId } = useChat();
+  const {
+    chatSessions,
+    newChat,
+    selectChat,
+    currentSessionId,
+    deleteChat,
+    renameChat,
+  } = useChat();
 
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -128,17 +135,23 @@ export default function Sidebar() {
                       >
                         <button
                           onClick={() => {
-                            console.log("Rename", chat.id);
+                            const newTitle = prompt(
+                              "Enter new chat name:",
+                              chat.title
+                            );
+                            if (newTitle && newTitle.trim()) {
+                              renameChat(chat.id, newTitle.trim());
+                            }
                             setOpenPopoverId(null);
                           }}
-                          className="p-1 text-centertext-xs flex justify-between items-center gap-2 text-xs cursor-pointer"
+                          className="p-1 text-centertext-xs flex justify-between items-center gap-2 text-xs cursor-pointer mb-2"
                         >
                           <Pencil size={16} />
                           Rename
                         </button>
                         <button
                           onClick={() => {
-                            console.log("Delete", chat.id);
+                            deleteChat(chat.id);
                             setOpenPopoverId(null);
                           }}
                           className="p-1 text-center text-red-600 text-xs flex justify-between items-center gap-2 cursor-pointer"
@@ -154,7 +167,6 @@ export default function Sidebar() {
           })}
         </div>
 
-        {/* Footer */}
         <div className="px-4 py-4 text-xs relative" ref={profileRef}>
           <div
             className="flex items-center gap-3 cursor-pointer"

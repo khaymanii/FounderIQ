@@ -27,6 +27,8 @@ type ChatContextType = {
   sendMessage: (text: string) => Promise<void>;
   newChat: () => Promise<void>;
   selectChat: (sessionId: string) => Promise<void>;
+  deleteChat: (sessionId: string) => Promise<void>;
+  renameChat: (sessionId: string, newTitle: string) => Promise<boolean>;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -186,6 +188,56 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }, 1000);
   };
 
+  const deleteChat = async (sessionId: string) => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from("chat_sessions")
+      .delete()
+      .eq("id", sessionId)
+      .eq("uid", user.id); // Optional: ensure user can only delete their own session
+
+    if (error) {
+      console.error("Error deleting chat:", error.message);
+      return;
+    }
+
+    // Update state after deletion
+    setChatSessions((prev) =>
+      prev.filter((session) => session.id !== sessionId)
+    );
+    if (currentSessionId === sessionId) {
+      setCurrentSessionId(null);
+      setMessages([]);
+    }
+  };
+
+  const renameChat = async (sessionId: string, newTitle: string) => {
+    if (!user) return false;
+
+    const { data, error } = await supabase
+      .from("chat_sessions")
+      .update({ title: newTitle })
+      .eq("id", sessionId)
+      .eq("uid", user.id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error renaming chat:", error.message);
+      return false;
+    }
+
+    // Update state with the new title
+    setChatSessions((prev) =>
+      prev.map((session) =>
+        session.id === sessionId ? { ...session, title: data.title } : session
+      )
+    );
+
+    return true; // ✅ Indicate success
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -195,6 +247,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         sendMessage,
         newChat,
         selectChat,
+        deleteChat,
+        renameChat,
       }}
     >
       {children}

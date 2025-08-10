@@ -1,9 +1,12 @@
+import { useChat } from "@/context/ChatContext";
 import Chatbox from "../components/Chatbox";
 import ChatScreen from "../components/ChatScreen";
 import Dropdown from "../components/Dropdown";
 import Sidebar from "../components/Sidebar";
 
 function Chat() {
+  const { setSelectedSector, currentSessionId } = useChat();
+
   return (
     <div className="flex flex-col md:flex-row h-screen bg-purple-100">
       {/* Sidebar: already responsive */}
@@ -15,7 +18,10 @@ function Chat() {
         <div className="fixed top-0 left-0 right-0 z-10 bg-purple-100 p-4  md:ml-64">
           <div className="flex justify-center max-w-3xl mx-auto">
             <Dropdown
-              onChange={(value) => console.log("Selected sector:", value)}
+              onChange={(sector) => {
+                setSelectedSector(sector);
+              }}
+              currentSessionId={currentSessionId}
             />
           </div>
         </div>

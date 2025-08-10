@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useChat } from "../context/ChatContext";
+import ReactMarkdown from "react-markdown";
+import Loader from "./Loader";
 
 const quirkyMessages = [
-  "Ask me like you’d ask your smartest co‑founder.",
+  "Ask me like you’d ask your smartest co-founder.",
   "Your next big idea starts here… go ahead!",
   "Pitch me like a founder, I’m all ears.",
   "Got a startup brainwave? Let’s hear it!",
@@ -15,7 +17,7 @@ const quirkyMessages = [
 ];
 
 function ChatScreen() {
-  const { messages } = useChat();
+  const { messages, isAILoading } = useChat(); // 👈 pulling isAILoading from context
   const [currentIndex, setCurrentIndex] = useState(0);
   const isEmpty = messages.length === 0;
 
@@ -38,18 +40,27 @@ function ChatScreen() {
           </p>
         </div>
       ) : (
-        messages.map((msg) => (
-          <div
-            key={msg.id}
-            className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-xl h-auto text-white text-sm shadow-md ${
-              msg.sender === "user"
-                ? "self-end bg-black"
-                : "self-start bg-purple-800"
-            }`}
-          >
-            {msg.text}
-          </div>
-        ))
+        <>
+          {messages.map((msg) => (
+            <div
+              key={msg.id}
+              className={`max-w-xs md:max-w-md lg:max-w-lg px-4 py-2 rounded-xl h-auto text-white text-sm shadow-md ${
+                msg.sender === "user"
+                  ? "self-end bg-black"
+                  : "self-start bg-purple-800"
+              }`}
+            >
+              <ReactMarkdown>{msg.text}</ReactMarkdown>
+            </div>
+          ))}
+
+          {/* AI is typing loader */}
+          {isAILoading && (
+            <div>
+              <Loader />
+            </div>
+          )}
+        </>
       )}
     </div>
   );

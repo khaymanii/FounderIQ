@@ -10,7 +10,7 @@ import { supabase } from "../supabaseClient";
 import { useAuth } from "./AuthContext";
 
 type Message = {
-  id: number;
+  id: number | string;
   sender: "user" | "founderiq";
   text: string;
 };
@@ -29,6 +29,10 @@ type ChatContextType = {
   selectChat: (sessionId: string) => Promise<void>;
   deleteChat: (sessionId: string) => Promise<void>;
   renameChat: (sessionId: string, newTitle: string) => Promise<boolean>;
+  selectedSector: string | null;
+  setSelectedSector: (sector: string | null) => void;
+  isAILoading: boolean;
+  setIsAILoading: (loading: boolean) => void;
 };
 
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
@@ -38,6 +42,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [selectedSector, setSelectedSector] = useState<string | null>(null);
+  const [isAILoading, setIsAILoading] = useState(false);
 
   // Fetch all chat sessions for this user
   useEffect(() => {
@@ -119,11 +125,11 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
     let sessionId = currentSessionId;
 
-    // ✅ If no current session, create one on the fly
+    // ✅ Create session if none exists
     if (!sessionId) {
       const { data: newSession, error: newSessionError } = await supabase
         .from("chat_sessions")
-        .insert([{ uid: user.id, title: text.slice(0, 30) || "New Chat" }]) // use first message as title
+        .insert([{ uid: user.id, title: text.slice(0, 30) || "New Chat" }])
         .select()
         .single();
 
@@ -134,15 +140,13 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
       sessionId = newSession.id;
       setCurrentSessionId(sessionId);
-
-      // Add this new session to sidebar list
       setChatSessions((prev) => [
         { id: newSession.id, title: newSession.title || "New Chat" },
         ...prev,
       ]);
     }
 
-    // ✅ Now insert the message with the sessionId
+    // ✅ Save user message
     const { data, error } = await supabase
       .from("messages")
       .insert([{ uid: user.id, session_id: sessionId, sender: "user", text }])
@@ -154,13 +158,83 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
 
     if (data && data[0]) {
-      const newMsg = data[0];
-      setMessages((prev) => [...prev, { id: newMsg.id, sender: "user", text }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: data[0].id, sender: "user", text },
+      ]);
     }
 
-    // ✅ Optional: Bot reply
-    setTimeout(async () => {
-      const botReply = "Thanks for your message! I'll help you shortly.";
+    // ✅ Start loading
+    setIsAILoading(true);
+
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_FOUNDERIQ_API_KEY}`,
+          "Content-Type": "application/json",
+          "X-Title": "FounderIQ",
+        },
+        body: JSON.stringify({
+          model: "deepseek/deepseek-r1-0528:free",
+          messages: [
+            {
+              role: "system",
+              content: `You are FounderIQ — an AI business consultant and cofounder. 
+              Tailor all advice to the "${
+                selectedSector || "General Tech"
+              }" industry. 
+              Give strategic, practical advice in markdown format with headings and bullet points.
+              Ask clarifying questions before making recommendations.`,
+            },
+            ...messages.map((m) => ({
+              role: m.sender === "user" ? "user" : "assistant",
+              content: m.text,
+            })),
+            { role: "user", content: text },
+          ],
+          stream: true,
+        }),
+      });
+
+      if (!res.body) throw new Error("No response body for streaming");
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let accumulatedText = "";
+
+      // First, add an empty AI message so we can update it live
+      let tempId = `temp-${Date.now()}`;
+      setMessages((prev) => [
+        ...prev,
+        { id: tempId, sender: "founderiq", text: "" },
+      ]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+
+        // Parse Server-Sent Events (SSE) chunks
+        const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+        for (let line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = JSON.parse(line.replace("data: ", ""));
+            const token = data.choices?.[0]?.delta?.content;
+            if (token) {
+              accumulatedText += token;
+              setMessages((prev) =>
+                prev.map((m) =>
+                  m.id === tempId ? { ...m, text: accumulatedText } : m
+                )
+              );
+            }
+          }
+        }
+      }
+
+      // ✅ Save final AI message to Supabase
       const { data: botData, error: botError } = await supabase
         .from("messages")
         .insert([
@@ -168,24 +242,24 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
             uid: user.id,
             session_id: sessionId,
             sender: "founderiq",
-            text: botReply,
+            text: accumulatedText,
           },
         ])
         .select();
 
-      if (botError) {
-        console.error("Bot reply error:", botError.message);
-        return;
-      }
-
+      if (botError) console.error("Bot reply save error:", botError.message);
       if (botData && botData[0]) {
-        const botMsg = botData[0];
-        setMessages((prev) => [
-          ...prev,
-          { id: botMsg.id, sender: "founderiq", text: botReply },
-        ]);
+        setMessages((prev) =>
+          prev.map((m) =>
+            String(m.id) === tempId ? { ...m, id: botData[0].id } : m
+          )
+        );
       }
-    }, 1000);
+    } catch (err) {
+      console.error("Error calling OpenRouter:", err);
+    } finally {
+      setIsAILoading(false);
+    }
   };
 
   const deleteChat = async (sessionId: string) => {
@@ -249,6 +323,10 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         selectChat,
         deleteChat,
         renameChat,
+        selectedSector,
+        setSelectedSector,
+        isAILoading,
+        setIsAILoading,
       }}
     >
       {children}

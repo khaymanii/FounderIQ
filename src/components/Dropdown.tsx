@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "../supabaseClient"; // adjust path if needed
 
 const techSectors = [
   "DevOps",
@@ -17,16 +18,48 @@ const techSectors = [
 
 export default function Dropdown({
   onChange,
+  currentSessionId,
 }: {
   onChange: (value: string) => void;
+  currentSessionId: string | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
 
-  const handleSelect = (sector: string) => {
+  // ✅ Fetch saved sector when session changes
+  useEffect(() => {
+    const fetchSelectedSector = async () => {
+      if (!currentSessionId) return;
+      const { data, error } = await supabase
+        .from("chat_sessions")
+        .select("selected_sector")
+        .eq("id", currentSessionId)
+        .single();
+
+      if (!error && data?.selected_sector) {
+        setSelected(data.selected_sector);
+      }
+    };
+
+    fetchSelectedSector();
+  }, [currentSessionId]);
+
+  const handleSelect = async (sector: string) => {
     setSelected(sector);
     onChange(sector);
     setIsOpen(false);
+
+    // ✅ Update Supabase
+    if (currentSessionId) {
+      const { error } = await supabase
+        .from("chat_sessions")
+        .update({ selected_sector: sector })
+        .eq("id", currentSessionId);
+
+      if (error) {
+        console.error("Error updating selected sector:", error.message);
+      }
+    }
   };
 
   return (

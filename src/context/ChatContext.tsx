@@ -129,7 +129,13 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     if (!sessionId) {
       const { data: newSession, error: newSessionError } = await supabase
         .from("chat_sessions")
-        .insert([{ uid: user.id, title: text.slice(0, 30) || "New Chat" }])
+        .insert([
+          {
+            uid: user.id,
+            title: text.slice(0, 30) || "New Chat",
+            selected_sector: selectedSector || null, // ✅ Save dropdown value
+          },
+        ])
         .select()
         .single();
 
@@ -140,8 +146,13 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
       sessionId = newSession.id;
       setCurrentSessionId(sessionId);
+
       setChatSessions((prev) => [
-        { id: newSession.id, title: newSession.title || "New Chat" },
+        {
+          id: newSession.id,
+          title: newSession.title || "New Chat",
+          selected_sector: newSession.selected_sector || null,
+        },
         ...prev,
       ]);
     }

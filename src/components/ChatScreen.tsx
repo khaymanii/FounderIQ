@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useChat } from "../context/ChatContext";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 import Loader from "./Loader";
 
 const quirkyMessages = [
@@ -50,7 +52,9 @@ function ChatScreen() {
                   : "self-start bg-purple-800"
               }`}
             >
-              <ReactMarkdown>{msg.text}</ReactMarkdown>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {msg.text}
+              </ReactMarkdown>
             </div>
           ))}
 

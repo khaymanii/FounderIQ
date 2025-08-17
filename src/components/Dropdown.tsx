@@ -26,14 +26,14 @@ const techSectors = [
   "RetailTech",
   "EnergyTech",
   "SportsTech",
-  "Blockchain & Web3",
-  "Gaming",
-  "Autonomous Vehicles",
-  "Cybersecurity",
-  "IoT (Internet of Things)",
-  "AI & Machine Learning",
-  "AR/VR & Metaverse",
-  "Robotics",
+  // "Blockchain & Web3",
+  // "Gaming",
+  // "Autonomous Vehicles",
+  // "Cybersecurity",
+  // "IoT (Internet of Things)",
+  // "AI & Machine Learning",
+  // "AR/VR & Metaverse",
+  // "Robotics",
 ];
 
 export default function Dropdown({

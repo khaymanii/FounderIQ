@@ -125,7 +125,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
     let sessionId = currentSessionId;
 
-    // ✅ Create session if none exists
+    // 1️⃣ Create session if none exists
     if (!sessionId) {
       const { data: newSession, error: newSessionError } = await supabase
         .from("chat_sessions")
@@ -133,7 +133,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           {
             uid: user.id,
             title: text.slice(0, 30) || "New Chat",
-            selected_sector: selectedSector || null, // ✅ Save dropdown value
+            selected_sector: selectedSector || null,
           },
         ])
         .select()
@@ -157,25 +157,25 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       ]);
     }
 
-    // ✅ Save user message
-    const { data, error } = await supabase
+    // 2️⃣ Save USER message
+    const { data: userMsg, error: userError } = await supabase
       .from("messages")
       .insert([{ uid: user.id, session_id: sessionId, sender: "user", text }])
       .select();
 
-    if (error) {
-      console.error("Error sending message:", error.message);
+    if (userError) {
+      console.error("Error sending message:", userError.message);
       return;
     }
 
-    if (data && data[0]) {
+    if (userMsg && userMsg[0]) {
       setMessages((prev) => [
         ...prev,
-        { id: data[0].id, sender: "user", text },
+        { id: userMsg[0].id, sender: "user", text },
       ]);
     }
 
-    // ✅ Start loading
+    // 3️⃣ Start AI response
     setIsAILoading(true);
 
     try {
@@ -192,11 +192,20 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
             {
               role: "system",
               content: `You are FounderIQ — an AI business consultant and cofounder. 
-              Tailor all advice to the "${
-                selectedSector || "General Tech"
-              }" industry. 
-              Give strategic, practical advice in markdown format with headings and bullet points.
-              Ask clarifying questions before making recommendations.`,
+                        Your job is to provide helpful, practical, and strategic advice for entrepreneurs.
+
+                        Guidelines:
+                        - Respond in a natural, conversational way (like ChatGPT).
+                        - Always consider the "${
+                          selectedSector || "General Tech"
+                        }" industry context when giving advice.
+                        - If the user greets (e.g., "hi", "hello"), respond with a short, friendly message.
+                        - If the user asks a vague or incomplete question, politely ask clarifying questions first.
+                        - Keep responses clear, structured, and easy to read. Use markdown (## headings, bullet points, numbered steps) where it makes sense, but keep it human and conversational.
+                        - Do not send multiple separate replies; always give one complete answer.
+                        - Remember past conversation context and build on it naturally.
+                        - Do not generate multiple messages per response — everything must be in one reply.
+                        - No horizontal rules or unnecessary separators.`,
             },
             ...messages.map((m) => ({
               role: m.sender === "user" ? "user" : "assistant",
@@ -204,6 +213,11 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
             })),
             { role: "user", content: text },
           ],
+          temperature: 0.7,
+          max_tokens: 1000,
+          top_p: 1,
+          frequency_penalty: 0,
+          presence_penalty: 0,
           stream: true,
         }),
       });
@@ -214,8 +228,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       const decoder = new TextDecoder("utf-8");
       let accumulatedText = "";
 
-      // First, add an empty AI message so we can update it live
-      let tempId = `temp-${Date.now()}`;
+      // ⏳ Temporary AI message in UI
+      const tempId = `temp-${Date.now()}`;
       setMessages((prev) => [
         ...prev,
         { id: tempId, sender: "founderiq", text: "" },
@@ -226,45 +240,53 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         if (done) break;
 
         const chunk = decoder.decode(value, { stream: true });
-
-        // Parse Server-Sent Events (SSE) chunks
         const lines = chunk.split("\n").filter((line) => line.trim() !== "");
+
         for (let line of lines) {
           if (line.startsWith("data: ")) {
-            const data = JSON.parse(line.replace("data: ", ""));
-            const token = data.choices?.[0]?.delta?.content;
-            if (token) {
-              accumulatedText += token;
-              setMessages((prev) =>
-                prev.map((m) =>
-                  m.id === tempId ? { ...m, text: accumulatedText } : m
-                )
-              );
+            const payload = line.replace("data: ", "");
+            if (payload === "[DONE]") continue;
+
+            try {
+              const data = JSON.parse(payload);
+              const token = data.choices?.[0]?.delta?.content;
+              if (token) {
+                accumulatedText += token;
+                setMessages((prev) =>
+                  prev.map((m) =>
+                    m.id === tempId ? { ...m, text: accumulatedText } : m
+                  )
+                );
+              }
+            } catch (e) {
+              console.error("Stream parse error:", e, payload);
             }
           }
         }
       }
 
-      // ✅ Save final AI message to Supabase
-      const { data: botData, error: botError } = await supabase
-        .from("messages")
-        .insert([
-          {
-            uid: user.id,
-            session_id: sessionId,
-            sender: "founderiq",
-            text: accumulatedText,
-          },
-        ])
-        .select();
+      // 4️⃣ Save AI message in DB ✅
+      if (accumulatedText.trim().length > 0) {
+        const { data: botMsg, error: botError } = await supabase
+          .from("messages")
+          .insert([
+            {
+              uid: user.id,
+              session_id: sessionId,
+              sender: "founderiq",
+              text: accumulatedText,
+            },
+          ])
+          .select();
 
-      if (botError) console.error("Bot reply save error:", botError.message);
-      if (botData && botData[0]) {
-        setMessages((prev) =>
-          prev.map((m) =>
-            String(m.id) === tempId ? { ...m, id: botData[0].id } : m
-          )
-        );
+        if (botError) {
+          console.error("Error saving AI message:", botError.message);
+        } else if (botMsg && botMsg[0]) {
+          // Replace temp with real DB ID
+          setMessages((prev) =>
+            prev.map((m) => (m.id === tempId ? { ...m, id: botMsg[0].id } : m))
+          );
+        }
       }
     } catch (err) {
       console.error("Error calling OpenRouter:", err);

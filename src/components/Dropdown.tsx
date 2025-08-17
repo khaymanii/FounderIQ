@@ -1,19 +1,39 @@
-import { useEffect, useState } from "react";
-import { supabase } from "../supabaseClient"; // adjust path if needed
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "../supabaseClient";
 
 const techSectors = [
-  "DevOps",
-  "Robotics",
-  "Software Engineering",
   "E-commerce",
   "Fintech",
   "Healthtech",
   "Edtech",
   "Greentech",
+  "Proptech",
+  "Agtech",
+  "Biotech",
+  "LegalTech",
+  "InsurTech",
+  "HRTech",
+  "GovTech",
+  "CleanTech",
+  "Supply Chain & Logistics Tech",
+  "TravelTech",
+  "MarTech (Marketing Technology)",
+  "AdTech",
+  "FoodTech",
+  "SpaceTech",
+  "MedTech",
+  "Wearable Tech",
+  "RetailTech",
+  "EnergyTech",
+  "SportsTech",
+  "Blockchain & Web3",
   "Gaming",
   "Autonomous Vehicles",
-  "5G & Telecom",
-  "UI/UX Design",
+  "Cybersecurity",
+  "IoT (Internet of Things)",
+  "AI & Machine Learning",
+  "AR/VR & Metaverse",
+  "Robotics",
 ];
 
 export default function Dropdown({
@@ -25,8 +45,9 @@ export default function Dropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // ✅ Fetch saved sector when session changes
+  // ✅ Fetch the saved sector from Supabase
   useEffect(() => {
     const fetchSelectedSector = async () => {
       if (!currentSessionId) return;
@@ -43,6 +64,23 @@ export default function Dropdown({
 
     fetchSelectedSector();
   }, [currentSessionId]);
+
+  // ✅ Handle outside clicks
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const handleSelect = async (sector: string) => {
     setSelected(sector);
@@ -63,13 +101,13 @@ export default function Dropdown({
   };
 
   return (
-    <div className="relative inline-block w-48 text-sm">
+    <div ref={dropdownRef} className="relative inline-block w-48 text-sm">
       {/* Dropdown button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="w-full px-4 py-2 mt-2 border border-gray-500 rounded-md bg-white text-left hover:border-purple-700 transition-colors cursor-pointer"
       >
-        {selected || "-- Choose a sector --"}
+        {selected || "General Tech"}
       </button>
 
       {/* Dropdown menu */}

@@ -17,7 +17,7 @@ const quirkyMessages = [
 ];
 
 function ChatScreen() {
-  const { messages, isAILoading } = useChat(); // 👈 pulling isAILoading from context
+  const { messages, isAILoading } = useChat();
   const [currentIndex, setCurrentIndex] = useState(0);
   const isEmpty = messages.length === 0;
 

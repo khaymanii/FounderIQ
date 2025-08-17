@@ -2,7 +2,7 @@ function Loader() {
   return (
     <div>
       <svg
-        className="h-12 w-12"
+        className="h-10 w-10"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 200 200"
       >

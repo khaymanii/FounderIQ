@@ -65,7 +65,6 @@ export default function Dropdown({
     fetchSelectedSector();
   }, [currentSessionId]);
 
-  // ✅ Handle outside clicks
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -87,7 +86,6 @@ export default function Dropdown({
     onChange(sector);
     setIsOpen(false);
 
-    // ✅ Update Supabase
     if (currentSessionId) {
       const { error } = await supabase
         .from("chat_sessions")
@@ -102,7 +100,6 @@ export default function Dropdown({
 
   return (
     <div ref={dropdownRef} className="relative inline-block w-48 text-sm">
-      {/* Dropdown button */}
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="w-full px-4 py-2 mt-2 border border-gray-500 rounded-md bg-white text-left hover:border-purple-700 transition-colors cursor-pointer"
@@ -110,7 +107,6 @@ export default function Dropdown({
         {selected || "General Tech"}
       </button>
 
-      {/* Dropdown menu */}
       {isOpen && (
         <ul className="absolute mt-1 w-full max-h-60 overflow-auto bg-white border border-gray-300 rounded-md shadow-lg z-50 custom-scrollbar">
           {techSectors.map((sector) => (

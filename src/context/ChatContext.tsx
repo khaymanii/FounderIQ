@@ -133,7 +133,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           {
             uid: user.id,
             title: text.slice(0, 30) || "New Chat",
-            selected_sector: selectedSector || null,
+            selected_sector: selectedSector || "General Tech",
           },
         ])
         .select()
@@ -151,7 +151,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         {
           id: newSession.id,
           title: newSession.title || "New Chat",
-          selected_sector: newSession.selected_sector || null,
+          selected_sector: newSession.selected_sector || "General Tech",
         },
         ...prev,
       ]);
@@ -202,10 +202,12 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
                         - If the user greets (e.g., "hi", "hello"), respond with a short, friendly message.
                         - If the user asks a vague or incomplete question, politely ask clarifying questions first.
                         - Keep responses clear, structured, and easy to read. Use markdown (## headings, bullet points, numbered steps) where it makes sense, but keep it human and conversational.
+                        - Format responses with clear spacing: always add one blank line between paragraphs, lists, or headings.
+                        - If you use a horizontal rule (---), ensure there is a blank line above and below it.
+                        - Avoid cramped Markdown formatting.
                         - Do not send multiple separate replies; always give one complete answer.
                         - Remember past conversation context and build on it naturally.
-                        - Do not generate multiple messages per response — everything must be in one reply.
-                        - No horizontal rules or unnecessary separators.`,
+                        - Do not generate multiple messages per response — everything must be in one reply.`,
             },
             ...messages.map((m) => ({
               role: m.sender === "user" ? "user" : "assistant",

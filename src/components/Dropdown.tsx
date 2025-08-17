@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { supabase } from "../supabaseClient";
 
 const techSectors = [
+  "General Tech",
   "E-commerce",
   "Fintech",
   "Healthtech",
@@ -44,7 +45,7 @@ export default function Dropdown({
   currentSessionId: string | null;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selected, setSelected] = useState("General Tech");
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // ✅ Fetch the saved sector from Supabase
@@ -99,7 +100,7 @@ export default function Dropdown({
   };
 
   return (
-    <div ref={dropdownRef} className="relative inline-block w-48 text-sm">
+    <div ref={dropdownRef} className="relative inline-block w-48 text-xs">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="w-full px-4 py-2 mt-2 border border-gray-500 rounded-md bg-white text-left hover:border-purple-700 transition-colors cursor-pointer"

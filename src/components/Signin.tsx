@@ -30,7 +30,7 @@ const Form = () => {
         </div>
 
         <p className="mt-6 text-center text-xs text-gray-400">
-          © Copyright 2025 {""}
+          © Copyright 2025
           <span className="font-semibold text-gray-600">
             Founder<span className="text-purple-800">IQ</span>
           </span>{" "}

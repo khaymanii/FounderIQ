@@ -13,7 +13,7 @@ export default function Chatbox() {
     }
   };
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto text-xs">
       <div className="flex-1 flex justify-around items-center p-4 border border-gray-500  hover:border-purple-700 rounded-md resize-none">
         <textarea
           rows={2}
@@ -39,7 +39,7 @@ export default function Chatbox() {
           }`}
           disabled={!input.trim()}
         >
-          <ArrowUp size={20} />
+          <ArrowUp size={16} />
         </button>
       </div>
     </div>

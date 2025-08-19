@@ -176,7 +176,7 @@ export default function Sidebar() {
               <img
                 src={user?.user_metadata?.avatar_url}
                 alt="Profile"
-                className="w-12 h-12 rounded-full border-2 border-purple-800 object-cover text-xs"
+                className="w-12 h-12 rounded-full border-2 bg-white border-purple-800 object-cover text-xs"
               />
             )}
             <p className="font-bold text-xs">

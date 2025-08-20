@@ -119,6 +119,36 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  // Decide max tokens dynamically based on question length
+  function getMaxTokens(question: string): number {
+    const wordCount = question.trim().split(/\s+/).length;
+
+    if (wordCount < 10) return 400; // short Qs
+    if (wordCount < 25) return 600; // medium Qs
+    return 800; // long/detailed Qs
+  }
+
+  // Decide temperature dynamically based on question type
+  function getTemperature(question: string): number {
+    const lowerQ = question.toLowerCase();
+
+    // If it's a greeting or factual query, keep it lower
+    if (["hi", "hello", "hey"].includes(lowerQ.trim())) return 0.5;
+    if (lowerQ.includes("define") || lowerQ.includes("what is")) return 0.4;
+
+    // If it's asking for strategy, ideas, or brainstorming, allow more creativity
+    if (
+      lowerQ.includes("strategy") ||
+      lowerQ.includes("ideas") ||
+      lowerQ.includes("creative")
+    ) {
+      return 0.9;
+    }
+
+    // Default balance
+    return 0.7;
+  }
+
   // Send a new message in the current session
   const sendMessage = async (text: string) => {
     if (!user) return;
@@ -187,7 +217,10 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           "X-Title": "FounderIQ",
         },
         body: JSON.stringify({
-          model: "deepseek/deepseek-r1-0528:free",
+          models: [
+            "meta-llama/llama-3.3-70b-instruct:free",
+            "deepseek/deepseek-r1-0528:free",
+          ],
           messages: [
             {
               role: "system",
@@ -215,12 +248,18 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
             })),
             { role: "user", content: text },
           ],
-          temperature: 0.7,
-          max_tokens: 1000,
+          temperature: getTemperature(text),
+          max_tokens: getMaxTokens(text),
           top_p: 1,
           frequency_penalty: 0,
           presence_penalty: 0,
           stream: true,
+          provider: {
+            allow_fallbacks: true,
+            sort: "latency",
+            require_parameters: true,
+            order: ["Meta", "DeepSeek"],
+          },
         }),
       });
 

@@ -208,10 +208,8 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           "X-Title": "FounderIQ",
         },
         body: JSON.stringify({
-          models: [
-            "meta-llama/llama-3.3-70b-instruct:free",
+          model:
             "deepseek/deepseek-r1-0528:free",
-          ],
           messages: [
             {
               role: "system",
@@ -244,12 +242,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           frequency_penalty: 0,
           presence_penalty: 0,
           stream: true,
-          provider: {
-            allow_fallbacks: true,
-            sort: "latency",
-            require_parameters: true,
-            order: ["Meta", "DeepSeek"],
-          },
         }),
       });
 

@@ -119,15 +119,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Decide max tokens dynamically based on question length
-  function getMaxTokens(question: string): number {
-    const wordCount = question.trim().split(/\s+/).length;
-
-    if (wordCount < 10) return 400; // short Qs
-    if (wordCount < 25) return 600; // medium Qs
-    return 800; // long/detailed Qs
-  }
-
   // Decide temperature dynamically based on question type
   function getTemperature(question: string): number {
     const lowerQ = question.toLowerCase();
@@ -249,7 +240,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
             { role: "user", content: text },
           ],
           temperature: getTemperature(text),
-          max_tokens: getMaxTokens(text),
           top_p: 1,
           frequency_penalty: 0,
           presence_penalty: 0,

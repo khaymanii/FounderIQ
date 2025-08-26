@@ -17,7 +17,7 @@ export default function Home() {
             </span>
           </div>
           <nav className="hidden md:flex items-center space-x-6">
-            <Link to="/Signin">
+            <Link to="/signin">
               <Button
                 size="sm"
                 className="bg-purple-800 hover:bg-purple-800 text-white cursor-pointer"

@@ -63,6 +63,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
+     navigate("/chat");
     if (error) console.error("Google Sign In Error:", error.message);
   };
 

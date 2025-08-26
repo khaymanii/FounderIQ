@@ -20,7 +20,7 @@ export default function Home() {
             <Link to="/signin">
               <Button
                 size="sm"
-                className="bg-purple-800 hover:bg-purple-800 text-white cursor-pointer"
+                className="bg-purple-800 hover:bg-purple-900 text-white cursor-pointer"
               >
                 Sign In
               </Button>
@@ -44,7 +44,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              className="cursor-pointer text-lg px-8 py-6 bg-purple-800 hover:bg-purple-800 text-white"
+              className="cursor-pointer text-lg px-8 py-6 bg-purple-800 hover:bg-purple-900 text-white"
             >
               Start chatting now
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -116,7 +116,7 @@ export default function Home() {
             </p>
             <Button
               size="lg"
-              className="text-lg px-12 py-6 bg-purple-800 hover:bg-purple-800 text-white cursor-pointer"
+              className="text-lg px-12 py-6 bg-purple-800 hover:bg-purple-900 text-white cursor-pointer"
             >
               Get started for free
               <ArrowRight className="ml-2 h-5 w-5" />

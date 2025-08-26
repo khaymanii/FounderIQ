@@ -16,7 +16,7 @@ export default function Home() {
               Founder<span className="text-purple-800">IQ</span>
             </span>
           </div>
-          <nav className="hidden md:flex items-center space-x-6">
+          <nav className="md:flex items-center space-x-6">
             <Link to="/signin">
               <Button
                 size="sm"
@@ -42,13 +42,15 @@ export default function Home() {
             any task.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="cursor-pointer text-lg px-8 py-6 bg-purple-800 hover:bg-purple-900 text-white"
-            >
-              Start chatting now
-              <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
+            <Link to="/signin">
+              <Button
+                size="lg"
+                className="cursor-pointer text-lg px-8 py-6 bg-purple-800 hover:bg-purple-900 text-white"
+              >
+                Start chatting now
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChat } from "../context/ChatContext";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -23,6 +23,17 @@ function ChatScreen() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const isEmpty = messages.length === 0;
 
+  // 👇 Ref for chat container
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // 👇 Auto-scroll when messages change
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages, isAILoading]); // runs whenever new message or loader appears
+
   useEffect(() => {
     if (isEmpty) {
       const interval = setInterval(() => {
@@ -34,7 +45,10 @@ function ChatScreen() {
   }, [isEmpty]);
 
   return (
-    <div className="flex flex-col space-y-4 py-6">
+    <div
+      className="flex flex-col space-y-4 py-6 h-[500px] overflow-y-auto px-4"
+      ref={chatContainerRef}
+    >
       {isEmpty ? (
         <div className="flex items-center justify-center text-center mt-40 px-4">
           <p className="text-gray-600 text-2xl transition-all duration-500 ease-in-out">

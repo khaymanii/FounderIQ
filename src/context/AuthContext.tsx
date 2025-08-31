@@ -51,6 +51,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
       setLoading(false);
+
+      if (session?.user) {
+        navigate("/chat"); // 👈 now it redirects properly
+      }
     });
 
     return () => {
@@ -62,6 +66,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/chat`, // ensures correct return URL
+      },
     });
     if (error) console.error("Google Sign In Error:", error.message);
   };

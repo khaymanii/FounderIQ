@@ -6,17 +6,10 @@ import NavBar from "@/components/NavBar";
 import Problem from "@/components/Problem";
 import HowItWorks from "@/components/HowItWorks";
 import Testimonials from "@/components/Testimonials";
-import { useTheme } from "@/context/ThemeContext"; // ✅ import ThemeContext
 
 export default function Home() {
-  const { theme } = useTheme(); // ✅ get theme ("light" | "dark")
-
   return (
-    <div
-      className={`${
-        theme === "dark" ? "dark" : ""
-      } min-h-screen bg-white dark:bg-black text-foreground`}
-    >
+    <div className="dark min-h-screen bg-black text-foreground">
       <NavBar />
       <HeroSection />
       <Problem />

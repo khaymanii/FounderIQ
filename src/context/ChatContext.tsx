@@ -503,7 +503,6 @@ Always end responses with forward momentum - either next steps, a question to ke
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
-            console.log("✅ Stream completed");
             break;
           }
 

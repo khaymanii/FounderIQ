@@ -12,7 +12,7 @@ export default function Footer() {
                 Founder<span className="text-purple-800">IQ</span>
               </span>
             </div>
-            <p className="text-muted-foreground">
+            <p className="text-lg md:text-2xl text-muted-foreground">
               The most advanced AI assistant for modern professionals.
             </p>
           </div>

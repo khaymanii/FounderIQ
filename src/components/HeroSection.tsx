@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 
 export default function HeroSection() {
   return (
-    <section className="container mx-auto px-4 py-20 text-center">
+    <section className="container mx-auto px-4 lg:pt-40 pt-30 pb-10 text-center">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-5xl font-bold mb-6 leading-tight">
+        <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
           Meet Your AI Co-Founder & Startup Consultant that
           <span className="text-purple-800"> understands</span> you
         </h1>
-        <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
+        <p className="text-lg md:text-2xl text-muted-foreground mb-8 leading-relaxed">
           Build, scale, and grow your startup with a 24/7 intelligent partner
           who helps you strategize, validate, and execute ideas faster than
           ever.

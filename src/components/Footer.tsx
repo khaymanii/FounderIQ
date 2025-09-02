@@ -1,4 +1,5 @@
 import Logo from "@/assets/logo.png";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -7,13 +8,16 @@ export default function Footer() {
         <div className="">
           <div>
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <img src={Logo} className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold">
+              <Link to="/">
+                <img src={Logo} alt="FounderIQ Logo" className="h-10 w-10" />
+              </Link>
+              <span className="text-xl font-bold hidden md:inline-block">
                 Founder<span className="text-purple-800">IQ</span>
               </span>
             </div>
-            <p className="text-lg md:text-2xl text-muted-foreground">
-              The most advanced AI assistant for modern professionals.
+            <p className="text-lg md:text-xl text-muted-foreground">
+              Your AI Co-Founder — available 24/7 to help validate, build, and
+              scale your startup.
             </p>
           </div>
         </div>

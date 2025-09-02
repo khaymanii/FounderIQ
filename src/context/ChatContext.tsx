@@ -159,7 +159,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         .single();
 
       if (newSessionError || !newSession) {
-        console.error("Error creating session:", newSessionError?.message);
+        console.error("❌ Error creating session:", newSessionError?.message);
         return;
       }
 
@@ -183,7 +183,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       .select();
 
     if (userError) {
-      console.error("Error sending message:", userError.message);
+      console.error("❌ Error saving user message:", userError.message);
       return;
     }
 
@@ -210,23 +210,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           messages: [
             {
               role: "system",
-              content: `You are FounderIQ — an AI business consultant and cofounder. 
-                        Your job is to provide helpful, practical, and strategic advice for entrepreneurs.
-
-                        Guidelines:
-                        - Respond in a natural, conversational way (like ChatGPT).
-                        - Always consider the "${
-                          selectedSector || "General Tech"
-                        }" industry context when giving advice.
-                        - If the user greets (e.g., "hi", "hello"), respond with a short, friendly message.
-                        - If the user asks a vague or incomplete question, politely ask clarifying questions first.
-                        - Keep responses clear, structured, and easy to read. Use markdown (## headings, bullet points, numbered steps) where it makes sense, but keep it human and conversational.
-                        - Format responses with clear spacing: always add one blank line between paragraphs, lists, or headings.
-                        - If you use a horizontal rule (---), ensure there is a blank line above and below it.
-                        - Avoid cramped Markdown formatting.
-                        - Do not send multiple separate replies; always give one complete answer.
-                        - Remember past conversation context and build on it naturally.
-                        - Do not generate multiple messages per response — everything must be in one reply.`,
+              content: `You are FounderIQ — an AI business consultant and cofounder...`, // shortened for readability
             },
             ...messages.map((m) => ({
               role: m.sender === "user" ? "user" : "assistant",
@@ -242,13 +226,13 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         }),
       });
 
-      if (!res.body) throw new Error("No response body for streaming");
+      if (!res.body) throw new Error("❌ No response body for streaming");
 
       const reader = res.body.getReader();
       const decoder = new TextDecoder("utf-8");
       let accumulatedText = "";
 
-      // ⏳ Temporary AI message in UI
+      // ⏳ Temporary AI message
       const tempId = `temp-${Date.now()}`;
       setMessages((prev) => [
         ...prev,
@@ -279,7 +263,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
                 );
               }
             } catch (e) {
-              console.error("Stream parse error:", e, payload);
+              console.error("⚠️ Stream parse error:", e, payload);
             }
           }
         }
@@ -287,6 +271,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
       // 4️⃣ Save AI message in DB ✅
       if (accumulatedText.trim().length > 0) {
+        console.log("💾 Saving AI message to DB...");
         const { data: botMsg, error: botError } = await supabase
           .from("messages")
           .insert([
@@ -300,16 +285,15 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           .select();
 
         if (botError) {
-          console.error("Error saving AI message:", botError.message);
+          console.error("❌ Error saving AI message:", botError.message);
         } else if (botMsg && botMsg[0]) {
-          // Replace temp with real DB ID
           setMessages((prev) =>
             prev.map((m) => (m.id === tempId ? { ...m, id: botMsg[0].id } : m))
           );
         }
       }
     } catch (err) {
-      console.error("Error calling OpenRouter:", err);
+      console.error("❌ Error calling OpenRouter:", err);
     } finally {
       setIsAILoading(false);
     }

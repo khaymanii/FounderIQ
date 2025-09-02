@@ -21,10 +21,7 @@ export default function NavBar() {
         <nav className="flex items-center space-x-3">
           <ThemeButton />
           <Link to="/signin">
-            <Button
-              size="sm"
-              className="bg-purple-800 hover:bg-purple-900 text-white cursor-pointer"
-            >
+            <Button className="w-16 py-1 text-xs bg-purple-800 hover:bg-purple-900 text-white cursor-pointer">
               Sign In
             </Button>
           </Link>

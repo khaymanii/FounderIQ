@@ -70,7 +70,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     fetchSessions();
   }, [user]);
 
-  // Create a new chat session
   const newChat = async () => {
     if (!user) return;
 
@@ -140,7 +139,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     return 0.7;
   }
 
-  // Send a new message in the current session
   const sendMessage = async (text: string) => {
     if (!user) return;
 
@@ -208,8 +206,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
           "X-Title": "FounderIQ",
         },
         body: JSON.stringify({
-          model:
-            "deepseek/deepseek-r1-0528:free",
+          model: "deepseek/deepseek-r1-0528:free",
           messages: [
             {
               role: "system",
@@ -325,7 +322,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       .from("chat_sessions")
       .delete()
       .eq("id", sessionId)
-      .eq("uid", user.id); // Optional: ensure user can only delete their own session
+      .eq("uid", user.id);
 
     if (error) {
       console.error("Error deleting chat:", error.message);

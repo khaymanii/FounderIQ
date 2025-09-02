@@ -440,7 +440,7 @@ Always end responses with forward momentum - either next steps, a question to ke
       const recentMessages = messages.slice(-20);
 
       const requestBody = {
-        model: "nvidia/llama-3.1-nemotron-ultra-253b-v1:free",
+        model: "meta-llama/llama-3.3-70b-instruct:free",
         messages: [
           {
             role: "system",

@@ -6,14 +6,14 @@ export default function HeroSection() {
   return (
     <section className="container mx-auto px-4 py-20 text-center">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          The AI assistant that
+        <h1 className="text-5xl md:text-5xl font-bold mb-6 leading-tight">
+          Meet Your AI Co-Founder & Startup Consultant that
           <span className="text-purple-800"> understands</span> you
         </h1>
         <p className="text-xl md:text-2xl text-muted-foreground mb-8 leading-relaxed">
-          Experience the future of conversation with our advanced AI. Get
-          instant answers, creative solutions, and intelligent assistance for
-          any task.
+          Build, scale, and grow your startup with a 24/7 intelligent partner
+          who helps you strategize, validate, and execute ideas faster than
+          ever.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/signin">

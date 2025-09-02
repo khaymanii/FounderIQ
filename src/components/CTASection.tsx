@@ -8,11 +8,11 @@ function CTASection() {
       <Card className="bg-card border-border">
         <CardContent className="p-12 text-center">
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Ready to transform your workflow?
+            Ready to Build Smarter?
           </h2>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join millions of users who trust our AI for their daily tasks. Start
-            your journey today and experience the difference.
+            Don’t go through the startup journey alone. Partner with an AI
+            Co-Founder who brings strategy, speed, and clarity to your vision.
           </p>
           <Button
             size="lg"

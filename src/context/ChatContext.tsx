@@ -460,11 +460,6 @@ Always end responses with forward momentum - either next steps, a question to ke
         max_tokens: 2000, // Add max tokens to prevent runaway responses
       };
 
-      console.log("🚀 Sending request to OpenRouter...", {
-        messageCount: requestBody.messages.length,
-        temperature: requestBody.temperature,
-      });
-
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
         headers: {
@@ -537,7 +532,6 @@ Always end responses with forward momentum - either next steps, a question to ke
                 // Check for finish_reason
                 const finishReason = data.choices?.[0]?.finish_reason;
                 if (finishReason) {
-                  console.log(`🏁 Stream finished: ${finishReason}`);
                   break;
                 }
               } catch (parseError) {
@@ -564,7 +558,6 @@ Always end responses with forward momentum - either next steps, a question to ke
       }
 
       // 4️⃣ Save AI message in DB ✅
-      console.log("💾 Saving AI message to DB...");
       const { data: botMsg, error: botError } = await supabase
         .from("messages")
         .insert([
@@ -585,8 +578,6 @@ Always end responses with forward momentum - either next steps, a question to ke
           prev.map((m) => (m.id === tempId ? { ...m, id: botMsg[0].id } : m))
         );
       }
-
-      console.log("✅ Message sent successfully");
     } catch (err) {
       console.error("❌ Error in sendMessage:", err);
 

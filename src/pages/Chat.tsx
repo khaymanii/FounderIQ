@@ -27,7 +27,7 @@ function Chat() {
         </div>
 
         {/* Chat Screen scrolls in between */}
-        <div className="flex-1 overflow-y-auto py- px-4 w-full custom-scrollbar">
+        <div className="flex-1 overflow-y-auto px-4 w-full custom-scrollbar">
           <ChatScreen />
         </div>
 

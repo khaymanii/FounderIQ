@@ -46,7 +46,7 @@ function ChatScreen() {
 
   return (
     <div
-      className="flex flex-col space-y-4 py-6 h-[500px] overflow-y-auto px-4 custom-scrollbar"
+      className="flex flex-col space-y-4 h-[800px] overflow-y-auto px-4 custom-scrollbar"
       ref={chatContainerRef}
     >
       {isEmpty ? (

@@ -46,11 +46,11 @@ function ChatScreen() {
 
   return (
     <div
-      className="flex flex-col space-y-4 py-6 h-[500px] overflow-y-auto px-4"
+      className="flex flex-col space-y-4 py-6 h-[500px] overflow-y-auto px-4 custom-scrollbar"
       ref={chatContainerRef}
     >
       {isEmpty ? (
-        <div className="flex items-center justify-center text-center mt-40 px-4">
+        <div className="flex items-center justify-center text-center mt-40 px-4 custom-scrollbar">
           <p className="text-gray-600 text-2xl transition-all duration-500 ease-in-out">
             {quirkyMessages[currentIndex]}
           </p>

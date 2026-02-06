@@ -3,33 +3,31 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package.json and lockfile
-COPY package*.json ./
+# Accept build-time env vars
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
 
-# Install all dependencies (including dev for build)
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+
+COPY package*.json ./
 RUN npm ci
 
-# Copy the source code
 COPY . .
-
-# Build the Vite app
 RUN npm run build
 
-# -------- 2. Production stage --------
-FROM node:20-alpine AS runner
+
+# -------- 2. Runtime stage --------
+FROM node:20-alpine
 
 WORKDIR /app
-ENV NODE_ENV=production
 
-# Only copy package.json and production dependencies
-COPY package*.json ./
-RUN npm ci --omit=dev
-
-# Copy the built files
+# Only copy build output
 COPY --from=builder /app/dist ./dist
 
-# Expose port for Vite preview
+# Install only vite (tiny)
+RUN npm install -g vite
+
 EXPOSE 4173
 
-# Start the Vite preview server
-CMD ["npx", "vite", "preview", "--port", "4173", "--host"]
+CMD ["vite", "preview", "--host", "--port", "4173"]

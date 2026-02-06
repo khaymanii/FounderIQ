@@ -25,7 +25,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/founderiq:0.1
+            ${{ secrets.DOCKERHUB_USERNAME }}/founderiq:0.2
             ${{ secrets.DOCKERHUB_USERNAME }}/founderiq:${{ github.sha }}
           build-args: |
             VITE_SUPABASE_URL=${{ secrets.VITE_SUPABASE_URL }}

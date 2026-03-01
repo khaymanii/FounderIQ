@@ -90,8 +90,8 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no -i key.pem ubuntu@${{ secrets.EC2_HOST }} << EOF
 
-          sudo docker stop founderiq || true
-          sudo docker rm founderiq || true
+          sudo docker stop fiq || true
+          sudo docker rm fiq || true
 
           sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/founderiq:0.3
 
